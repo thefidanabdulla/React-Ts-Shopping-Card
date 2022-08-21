@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
+import { useShoppingCart } from '../context/ShoppingCartContext';
 import { formatCurrenncy } from '../utilities/formatCurrency';
 
 
@@ -13,7 +14,9 @@ type StoreItemProps = {
 
 const StoreItem = ({id, name, price, imgUrl} : StoreItemProps) => {
 
-    const quantity = 0;
+    const { getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart } = useShoppingCart() 
+
+    const quantity = getItemQuantity(id);
 
   return (
     <Card className='h-100'>
@@ -26,7 +29,10 @@ const StoreItem = ({id, name, price, imgUrl} : StoreItemProps) => {
             <div className='mt-auto'>
                 {
                     quantity === 0 ?
-                    <Button className='w-100'> + Add to cart </Button>
+                    <Button 
+                        className='w-100'
+                        onClick={() => increaseCartQuantity(id)}
+                    > + Add to cart </Button>
                     : <div
                         className='d-flex align-items-center flex-column'
                         style={{ gap: '.5rem' }}
@@ -35,13 +41,13 @@ const StoreItem = ({id, name, price, imgUrl} : StoreItemProps) => {
                             className='d-flex align-items-center justify-content-center'
                             style={{ gap: '.5rem' }}
                         >
-                            <Button>-</Button>
+                            <Button onClick={() => decreaseCartQuantity(id)}>-</Button>
                             <div>
                                 <span className='fs-3'>{quantity}</span> in a cart
                             </div>
-                            <Button>+</Button>
+                            <Button onClick={() => increaseCartQuantity(id)}>+</Button>
                         </div>
-                        <Button variant='danger' size='sm'>Remove</Button>
+                        <Button onClick={() => removeFromCart(id)} variant='danger' size='sm'>Remove</Button>
                     </div>               
                 }
             </div>
